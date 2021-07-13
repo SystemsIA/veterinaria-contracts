@@ -1,0 +1,420 @@
+openapi: 3.0.1
+info:
+  title: Veterinaria API
+  description: |
+    Documentación de la api de visitantes, clientes y médicos.
+  version: 1.0.0.
+servers:
+- url: https://gaa.rrqq.me/api
+
+
+paths:
+  /rest-auth/login/:
+    post:
+      tags:
+      - Auth
+      summary: Inicio de sesión del cliente o médico.
+      description: Devuelve el token del usuario. Solo si son clientes o médicos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+
+  /rest-auth/user/:
+    get:
+      summary: Detalle del usuario del cliente o médico.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle del usuario.
+      tags:
+        - Auth
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+  /rest-auth/user/notificaciones/:
+    get:
+      tags:
+      - Auth
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificacionDetail'
+
+  /rest-auth/password/:
+    post:
+      summary: Cambio de contraseña del cliente o médico.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle del usuario.
+      tags:
+        - Auth
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  password1:
+                    type: string
+                  password2:
+                    type: string
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: contraseña cambiada correctamente
+
+  /productos/:
+    get:
+      summary: Lista de productos.
+      description: Devuelve la lista de productos.
+      tags:
+        - Productos
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductoDetail'
+
+  /productos/{id}/:
+    get:
+      summary: Detalle de productos.
+      description: Devuelve el detalle de un productos por su id.
+      tags:
+        - Productos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductoDetail'
+
+  # Clientes
+  /clientes/:
+    get:
+      summary: Lista de clientes.
+      description: Requiere el token del usuario(cliente o médico). Devuelve la lista de clientes.
+      tags:
+        - Cliente
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDetail'
+    post:
+      summary: Creación de clientes.
+      description: Requiere el token del usuario(médico). Crea un cliente.
+      tags:
+        - Cliente
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCrear'
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCrear'
+
+  /clientes/{id}/:
+    get:
+      summary: Detalle de clientes.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de clientes.
+      tags:
+        - Cliente
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+
+  /clientes/{id}/mascotas/:
+    post:
+      summary: Creación de mascotas para un cliente.
+      description: Requiere el token del usuario(médico). Crea una mascota.
+      tags:
+        - Cliente
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MascotaCrear'
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MascotaCrear'
+
+components:
+  schemas:
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: admin@gmail.com
+        password:
+          type: string
+          example: "peppa123"
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+          description: |
+            Es el token que identifica al usuario.
+    UserDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        nombre:
+          type: string
+        tupoUsuario:
+          type: string
+          enum: [CLIENTE, MEDICO]
+        dni:
+          type: string
+        direccion:
+          type: string
+        telefono:
+          type: string
+        mascotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/MascotaDetail'
+    
+    UserCrear:
+      type: object
+      properties:
+        nombre:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        dni:
+          type: string
+        direccion:
+          type: string
+        telefono:
+          type: string
+    
+    EspecieDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        tipo:
+          type: string
+          enum: [FELINO, CANINO, AVE, ACUATICO, ROEDOR, GANADO]
+        imagen:
+          type: string
+          
+    MascotaDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        nombre:
+          type: string
+        especie:
+          $ref: '#/components/schemas/EspecieDetail'
+        edad:
+          type: number
+        raza:
+          type: string
+        color:
+          type: string
+        alergias:
+          type: string
+        sexo:
+          type: string
+          enum: [MACHO, HEMBRA]
+        esterilizado:
+          type: boolean
+        entero:
+          type: boolean
+        gestacion:
+          type: boolean
+        lactancia:
+          type: boolean
+        dni:
+          type: string
+    
+    MascotaCrear:
+      type: object
+      properties:
+        nombre:
+          type: string
+        especia:
+          type: number
+        edad:
+          type: number
+        raza:
+          type: string
+        color:
+          type: string
+        alergias:
+          type: string
+        sexo:
+          type: string
+          enum: [MACHO, HEMBRA]
+        esterilizado:
+          type: boolean
+        entero:
+          type: boolean
+        gestacion:
+          type: boolean
+        lactancia:
+          type: boolean
+        dni:
+          type: string
+
+    NotificacionDetail:
+      type: object
+      properties:
+        motivo:
+          type: string
+        visto:
+          type: boolean
+        created:
+          type: string
+    
+    ProductoDetail:
+      type: object
+      properties:
+        nombre:
+          type: string
+        precio:
+          type: number
+          format: float
+        stock:
+          type: number
+          format: float
+        imagenPrincipal:
+          type: string
+        marca:
+          $ref: '#/components/schemas/MarcaDetail'
+        imagenes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImagenDetail'
+        
+
+    MarcaDetail:
+      type: object
+      properties:
+        nombre:
+          type: string
+        imagen:
+          type: string
+    
+    ImagenDetail:
+      type: object
+      properties:
+        imagen:
+          type: string
+        
