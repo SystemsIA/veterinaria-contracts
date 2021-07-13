@@ -66,7 +66,7 @@ paths:
           content: 
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificacionDetail'
+                $ref: '#/components/schemas/NotificacionPaginada'
 
   /rest-auth/password/:
     post:
@@ -230,6 +230,12 @@ paths:
           schema:
             type: string
             example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
       requestBody:
         required: true
         content:
@@ -243,7 +249,230 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MascotaCrear'
+  
+  # Citas
+  /citas/:
+    get:
+      summary: Lista de citas.
+      description: Requiere el token del usuario(cliente o médico). Devuelve la lista de citas del clientes.
+      tags:
+        - Citas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db      
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CitaDetail'
+    post:
+      summary: Crear citas.
+      description: Requiere el token del usuario(cliente o médico). Crea citas.
+      tags:
+        - Citas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fechaCita:
+                  type: string
+                motivo:
+                  type: string
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitaDetail'
+  /citas/{id}/:
+    get:
+      summary: Detalle de citas.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de una citas del clientes.
+      tags:
+        - Citas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1    
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CitaDetail'
+    patch:
+      summary: Actualiza de citas.
+      description: Requiere el token del usuario(cliente o médico). Actualiza el detalle de una citas del clientes.
+      tags:
+        - Citas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CitaUpdate' 
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                
+                $ref: '#/components/schemas/CitaDetail'
+  
+  # Mascotas
+  /mascotas/:
+    get:
+      summary: Lista de mascotas.
+      description: Requiere el token del usuario(cliente o médico). Devuelve la lista de mascotas del clientes.
+      tags:
+        - Mascotas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1 
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                
+                type: array
+                items:
+                  $ref: '#/components/schemas/MascotaDetail'
 
+  /mascotas/{id}/:
+    get:
+      summary: Detalle de mascota.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de mascotas del clientes.
+      tags:
+        - Mascotas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                               
+                $ref: '#/components/schemas/MascotaDetail'
+  
+  /mascotas/{id}/historias/:
+    post:
+      summary: Crea histotias de la mascota.
+      description: Requiere el token del usuario(cliente o médico). Crea una historia de la mascotas del clientes.
+      tags:
+        - Mascotas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoriasDetail'
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoriasDetail'
+    get:
+      summary: Lista de histotias de la mascota.
+      description: Requiere el token del usuario(cliente o médico). Lista las historia de la mascotas del clientes.
+      tags:
+        - Mascotas
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1 
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoriasDetail'
 components:
   schemas:
     Login:
@@ -383,6 +612,20 @@ components:
         created:
           type: string
     
+    NotificacionPaginada:
+      type: object
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+        previus:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificacionDetail'
+    
     ProductoDetail:
       type: object
       properties:
@@ -417,4 +660,53 @@ components:
       properties:
         imagen:
           type: string
-        
+      
+    CitaDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        fechaCita:
+          type: string
+        motivo:
+          type: string
+        cancelada:
+          type: boolean
+        atendida:
+          type: boolean
+    CitaUpdate:
+      type: object
+      properties:
+        fechaCita:
+          type: string
+        motivo:
+          type: string
+        cancelada:
+          type: boolean
+
+    HistoriasDetail:
+      type: object
+      properties:
+        description:
+          type: string
+        talla:
+          type: string
+        peso:
+          type: number
+          format: float
+        tarea:
+          type: string
+          enum: [CONSULTA, CITA, CIRUGIA, VACUNA, EXAMEN]
+        internado:
+          type: boolean
+        temperatura:
+          type: number
+          format: float
+        pulso:
+          type: number
+        diagnostico:
+          type: string
+        examen:
+          type: string
+        recetaMedica:
+          type: string
