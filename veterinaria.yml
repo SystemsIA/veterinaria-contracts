@@ -377,12 +377,6 @@ paths:
           schema:
             type: string
             example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1 
       responses: 
         200:
           description: OK
@@ -473,6 +467,167 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HistoriasDetail'
+  
+  # Medicos
+  /medicos/:
+    get:
+      summary: Lista de medicos.
+      description: Requiere el token del usuario(cliente o médico). Devuelve la lista de mascotas del clientes.
+      tags:
+        - Medicos
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedicoDetail'
+
+  /medicos/{id}/:
+    get:
+      summary: Detalle de medico.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de mascotas del clientes.
+      tags:
+        - Medicos
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                               
+                $ref: '#/components/schemas/MedicoDetail'
+
+  # Historias y estados
+  /historias/:
+    get:
+      summary: Lista de historias.
+      description: Requiere el token del usuario(cliente o médico). Devuelve la lista de mascotas del clientes.
+      tags:
+        - Historias y estados
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedicoDetail'
+
+  /historias/{id}/:
+    get:
+      summary: Detalle de una historia.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de mascotas del clientes.
+      tags:
+        - Historias y estados
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                               
+                $ref: '#/components/schemas/MedicoDetail'
+  
+  /historias/{id}/estados/:
+    get:
+      summary: Lista de estados de una historia.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de mascotas del clientes.
+      tags:
+        - Historias y estados
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                               
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstadoDetail'
+    
+    post:
+      summary: Crea un estado para una historia.
+      description: Requiere el token del usuario(cliente o médico). Devuelve el detalle de mascotas del clientes.
+      tags:
+        - Historias y estados
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
+            example: a3c1b77fdb9caa9da6979d5cf5d2a6b98f4336db
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstadoCrear'
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                               
+                $ref: '#/components/schemas/EstadoDetail'
+
+  # Utils
+  /especies/:
+    get:
+      summary: Lista de especies.
+      tags:
+        - Utilidades
+      responses: 
+        200:
+          description: OK
+          content: 
+            application/json:
+              schema:                
+                type: array
+                items:
+                  $ref: '#/components/schemas/EspecieDetail'
 components:
   schemas:
     Login:
@@ -709,4 +864,43 @@ components:
         examen:
           type: string
         recetaMedica:
+          type: string
+
+    MedicoDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        nombre:
+          type: string
+        tupoUsuario:
+          type: string
+          enum: [CLIENTE, MEDICO]
+        dni:
+          type: string
+        direccion:
+          type: string
+        telefono:
+          type: string
+        activo:
+          type: boolean
+
+    EstadoDetail:
+      type: object
+      properties:
+        nombre:
+          type: string
+        descripcion:
+          type: string
+        created:
+          type: string
+
+    EstadoCrear:
+      type: object
+      properties:
+        nombre:
+          type: string
+        descripcion:
           type: string
