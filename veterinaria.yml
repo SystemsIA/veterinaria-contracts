@@ -733,7 +733,7 @@ components:
       properties:
         nombre:
           type: string
-        especia:
+        especie:
           type: number
         edad:
           type: number
